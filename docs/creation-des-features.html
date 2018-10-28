@@ -129,12 +129,77 @@ $(document).ready(function () {
 </div>
 
 
-<p>Cette page a comme objectif de décrire de manière plus précise comment les features ont été calculés sur le jeu de données <em>train-features.csv</em>.</p>
+<p>Cette page a comme objectif de décrire de manière plus précise comment les <em>features</em> ont été calculées sur le jeu de données <em>train-features.csv</em>.</p>
 <div id="mise-en-contexte" class="section level1">
 <h1>Mise en contexte</h1>
+<p>Étant donné que le traitement des images n’est pas un champ d’expertise facile à maîtriser, nous avons décider de vous donner un petit coup de main. Ainsi, nous avons créés pour vous des <em>features</em> à partir d’un réseau de neurones populaire (<code>ResNet50</code>) entraîné sur le jeu de données <code>imagenet</code>. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de donnes.</p>
+<p>Il est important de noter que nous n’avons <strong>pas ré-entraîné</strong> le réseau sur notre jeu de données. Nous avons seulement fait la prédiction sur chacune de nos images en conservant les valeurs des neurones de la dernière couche cachée, plutôt que la couche de sortie.</p>
 </div>
 <div id="methodologie-utilisee" class="section level1">
 <h1>Méthodologie utilisée</h1>
+<p>Voici l’algorithme que nous avons suivi pour créer les <em>features</em>. Vous pouvez ré-appliquer ce genre de méthodologie avec un autre réseau de votre choix ou bien conserver les valeurs d’une autre couche cachée.</p>
+<pre class="r"><code># 1. Importer le réseau pré-entraîné (ResNet50 avec 'imagenet')
+# 2. Choisir la couche cachée pour extraire les valeurs ('flatten_1')
+# 3. Pour chacune des images, répéter les étapes 4 à 6
+# 4. Importer l'image, la re-dimensionner (si nécessaire) et transformer en array
+# 5. Faire un pré-traitement (si nécessaire)
+# 6. Faire la prédiction de l'image et garder la couche définit en (2)</code></pre>
+</div>
+<div id="exemple-de-code" class="section level1">
+<h1>Exemple de code</h1>
+<p>Voici un exemple de code <em>Python</em> que nous avons fait pour créer les <em>features</em> selon la méthodologie définit plus haut.</p>
+<pre class="py"><code>
+import re
+from keras.applications.resnet50 import ResNet50
+from keras.preprocessing import image
+from keras.applications.resnet50 import preprocess_input, decode_predictions
+from keras.models import Model
+import numpy as np
+
+import glob
+
+# Importer le modele
+model = ResNet50(weights='imagenet')
+model_for_output = Model(inputs=model.input, outputs=model.get_layer('flatten_1').output)
+
+# Extract train dataset
+file_list = glob.glob('path-to-data/*.png')
+
+n = 50
+
+for i in range(len(file_list)//n + 1):
+    paths = file_list[i*n:min((i+1)*n,len(file_list))]
+    img = image.load_img(paths[0], target_size=(224, 224))
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    
+    for p in paths[1:]:
+        img = image.load_img(p, target_size=(224, 224))
+        temp = image.img_to_array(img)
+        temp = np.expand_dims(temp, axis=0)
+        
+        x = np.concatenate([x,temp], axis=0)
+    
+    x = preprocess_input(x)
+    
+    image_list = []
+    for file in range(i*n,min((i+1)*n,len(file_list))):
+        image_list.append(re.search('\d+', file_list[file]).group(0))
+    image_list = np.array([image_list]).reshape(-1,1)
+    
+    if i == 0:
+        flatten_pool_features = np.concatenate([image_list, 
+                                               model_for_output.predict(x)], 
+                                               axis=1)
+    else:
+        flatten_pool_features = np.concatenate([flatten_pool_features, 
+                                                np.concatenate([image_list, model_for_output.predict(x)], axis=1)],
+                                                axis=0)
+
+np.savetxt('path-to-save-data/train-features.csv', 
+           flatten_pool_features, 
+           delimiter=',',
+           fmt = '%s')</code></pre>
 </div>
 
 
