@@ -14,13 +14,50 @@ Cette page a comme objectif de faire une brève exploration du jeu de données.
 
 # Mise en contexte
 
-Pour entraîner votre modèle, vous aurez accès à des données structurées de 2 manières. La première est essentiellement un jeu de données plus classiques avec des observations sur des lignes et des variables explicatives comme colones. Pour la deuxième manière, les données sont stockées sous formes d'images classiques, en format *.png*.
+Pour entraîner votre modèle, vous aurez accès à des données structurées de 2 manières. La première consiste en un jeu de données plus classiques avec des observations sur des lignes et des variables explicatives sur les colonnes. Pour la deuxième manière, les données sont stockées sous formes d'images classiques, en format *.png*.
 
 # Présentation des données
 
+Nous allons commencer par importer les jeu de données.
+
+```{r import_data}
+library(data.table)
+data_train_features <- fread("data/train-features.csv")
+data_train_repoonses <- fread("data/data-id-train.csv")
+```
+
+On peut commencer par sortir le nombre de toits verts que nous avons dans notre jeu de données d'entraînement.
+
+```{r nb_green_roof}
+(table_toits_vert <- table(data_train_repoonses$green_roof_ind))
+```
+
+On remarque que nous avons environ une proportion d'environ `r paste(round(100 * table_toits_vert[2]/(table_toits_vert[1] + table_toits_vert[2])), "%")` de toits verts dans notre jeu de données. Il s'agit donc d'une situation où les données ne sont pas parfaitement balancées entre les deux classes (50/50). Cependant, il ne s'agit pas d'un cas extrême de données débalancées. C'est un aspect que vous devrez gardez en tête lors de la préparation de votre modèle.
+
+Chaque jeu de données comporte un identifiant unique. Vous pouvez en tout temps retrouver l'image correspondante en utilisant l'*ID* présent dans le nom du fichier. Par exemple, on peut retrouver une image de chacune des classes dans le jeu de données *daat-train-id.csv* et voir les images étant rattachées à celles-ci. Voici un exemple de toit vert:
+
+```{r exemple_toit_vert}
+library(png)
+set.seed(666)
+
+exemple_toit_vert <- data_train_repoonses[sample(which(data_train_repoonses$green_roof_ind == 1), 1),]$ID
+grid::grid.raster(readPNG(paste0("data/data-train-folder/data-train/image-", exemple_toit_vert, ".png")))
+```
+
+```{r exemple_toit_normal}
+exemple_toit_normal <- data_train_repoonses[sample(which(data_train_repoonses$green_roof_ind == 0), 1),]$ID
+grid::grid.raster(readPNG(paste0("data/data-train-folder/data-train/image-", exemple_toit_normal, ".png")))
+```
+
+On remarque que les toits verts sont reconnus par leur textures "brunâtre" et ayant une certaine texture spécifique. Vous pouvez consulter d'autres exemples pour bien comprendre qu'est que vous devez modéliser.
+
 ## Données avec *features*
 
+Comme mentionné en introduction, vous aurez accès à un jeu de données (*train-features.csv*) où chaque image est représentée par un vecteur de nombre réels qui correspondent aux poids de la dernière couche du réseau de neurones `ResNet50` entraîné sur le jeu de données `imagenet`. Pour plus de détails sur la méthodologie utilisée pour trouver ces représentations, cliquez sur ce [lien](https://github.com/stecaron/meetup-ML-assurance-hackathon/wiki).
+
 ## Données stockées sous forme d'images
+
+Vous aurez également accès à un fichier (*data-train.zip*) contenant toutes les images originales. Vous pourrez utiliser ces images pour analyser les résultats de votre modèle, mais également pour entraîner directement votre modèle. Les images sont stockées dans un format de 224x224.
 
 # Exploration des données
 
@@ -28,6 +65,13 @@ L'exploration des données sera faite exclusivement sur le jeu de données plus 
 
 ## Informations générales
 
-## Exploration des *features*
+Comme mentionné un peu plus haut, la proportion de toits verts est d’environ `r paste(round(100 * table_toits_vert[2]/(table_toits_vert[1] + table_toits_vert[2])), "%")`. Voici quelques informations générales sur le jeu de données avec les *features* :
+
+```{r info_generales}
+dim(data_train_features)
+str(data_train_features, list.len = 8)
+```
 
 ## Réduction de dimensionnalité
+
+Comme vous pouvez le remarquer, le jeu de données *train-features.csv* a plus de colonnes (variables) que de lignes (observations). Cela fait notamment en sorte que le problème d'optimisation pour une régression classique aura une infinité de solutions. On ne pourrait donc pas appliquer par exemple un *GLM* directement sur le jeu de données. En conclusion, étant donné que le jeu de données initial possède $2048$ variables explicatives (si on enlève le *ID*), il devrait être pertinent de considérer une méthode de **réduction de la dimensionnalité** et ainsi représenter les données dans un espace à plus petite dimension ...
