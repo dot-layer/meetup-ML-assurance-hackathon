@@ -1,0 +1,33 @@
+---
+title: "Exploration des données"
+author: "Stéphane Caron"
+date: '2018-11-10'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "../")
+```
+
+Cette page a comme objectif de faire une brève exploration du jeu de données.
+
+# Mise en contexte
+
+Pour entraîner votre modèle, vous aurez accès à des données structurées de 2 manières. La première est essentiellement un jeu de données plus classiques avec des observations sur des lignes et des variables explicatives comme colones. Pour la deuxième manière, les données sont stockées sous formes d'images classiques, en format *.png*.
+
+# Présentation des données
+
+## Données avec *features*
+
+## Données stockées sous forme d'images
+
+# Exploration des données
+
+L'exploration des données sera faite exclusivement sur le jeu de données plus "classiques" avec les *features* pré-calculées.
+
+## Informations générales
+
+## Exploration des *features*
+
+## Réduction de dimensionnalité

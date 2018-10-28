@@ -1,0 +1,17 @@
+---
+title: "Création des *features*"
+author: "Stéphane Caron"
+date: '2018-11-10'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "../")
+```
+
+Cette page a comme objectif de décrire de manière plus précise comment les features ont été calculés sur le jeu de données *train-features.csv*.
+
+# Mise en contexte
+
+# Méthodologie utilisée
