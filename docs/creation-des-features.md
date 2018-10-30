@@ -1,29 +1,21 @@
----
-title: "Création des *features*"
-author: "Meetup Machine Learning Québec - Stéphane Caron"
-date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: |
-  Cette page a comme objectif de décrire de manière plus précise comment les *features* ont été calculées sur le jeu de données *train-features.csv*.
-output: github_document
-lang: fr
----
+Création des *features*
+================
+Meetup Machine Learning Québec - Stéphane Caron
+29 October 2018
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = "../")
-```
+Mise en contexte
+================
 
-# Mise en contexte
-
-Étant donné que le traitement des images n'est pas un champ d'expertise facile à maîtriser, nous avons décidé de vous donner un petit coup de main. Ainsi, nous avons créé pour vous des *features* à partir d'un réseau de neurones populaire (`ResNet50`) entraîné sur le jeu de données `imagenet`. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de données. 
+Étant donné que le traitement des images n'est pas un champ d'expertise facile à maîtriser, nous avons décidé de vous donner un petit coup de main. Ainsi, nous avons créé pour vous des *features* à partir d'un réseau de neurones populaire (`ResNet50`) entraîné sur le jeu de données `imagenet`. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de données.
 
 Il est important de noter que nous n'avons **pas ré-entraîné** le réseau sur notre jeu de données. Nous avons seulement fait la prédiction sur chacune de nos images en conservant les valeurs des neurones de la dernière couche cachée, plutôt que la couche de sortie.
 
-# Méthodologie utilisée
+Méthodologie utilisée
+=====================
 
 Voici l'algorithme que nous avons suivi pour créer les *features*. Vous pouvez ré-appliquer ce genre de méthodologie avec un autre réseau de votre choix ou bien conserver les valeurs d'une autre couche cachée.
 
-```{r algo}
+``` r
 # 1. Importer le réseau pré-entraîné (ResNet50 avec 'imagenet')
 # 2. Choisir la couche cachée pour extraire les valeurs ('flatten_1')
 # 3. Pour chacune des images, répéter les étapes 4 à 6
@@ -32,11 +24,12 @@ Voici l'algorithme que nous avons suivi pour créer les *features*. Vous pouvez 
 # 6. Faire la prédiction de l'image et garder la couche définie en (2)
 ```
 
-# Exemple de code
+Exemple de code
+===============
 
 Voici un exemple de code *Python* que nous avons fait pour créer les *features* selon la méthodologie définie plus haut.
 
-```{py exemple_code}
+``` py
 
 import re
 from keras.applications.resnet50 import ResNet50
@@ -90,4 +83,3 @@ np.savetxt('path-to-save-data/train-features.csv',
            delimiter=',',
            fmt = '%s')
 ```
-
