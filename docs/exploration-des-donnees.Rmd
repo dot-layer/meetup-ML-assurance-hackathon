@@ -1,16 +1,18 @@
 ---
 title: "Exploration des données"
-author: "Stéphane Caron"
-date: '2018-11-10'
+author: "Meetup Machine Learning Québec - Stéphane Caron"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+abstract: |
+  Cette page a comme objectif de faire une brève exploration du jeu de données.
 output: html_document
+lang: fr
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = "../")
 ```
-
-Cette page a comme objectif de faire une brève exploration du jeu de données.
 
 # Mise en contexte
 
