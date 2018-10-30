@@ -14,7 +14,7 @@ Cette page a comme objectif de décrire de manière plus précise comment les *f
 
 # Mise en contexte
 
-Étant donné que le traitement des images n'est pas un champ d'expertise facile à maîtriser, nous avons décider de vous donner un petit coup de main. Ainsi, nous avons créés pour vous des *features* à partir d'un réseau de neurones populaire (`ResNet50`) entraîné sur le jeu de données `imagenet`. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de donnes. 
+Étant donné que le traitement des images n'est pas un champ d'expertise facile à maîtriser, nous avons décidé de vous donner un petit coup de main. Ainsi, nous avons créé pour vous des *features* à partir d'un réseau de neurones populaire (`ResNet50`) entraîné sur le jeu de données `imagenet`. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de données. 
 
 Il est important de noter que nous n'avons **pas ré-entraîné** le réseau sur notre jeu de données. Nous avons seulement fait la prédiction sur chacune de nos images en conservant les valeurs des neurones de la dernière couche cachée, plutôt que la couche de sortie.
 
@@ -28,12 +28,12 @@ Voici l'algorithme que nous avons suivi pour créer les *features*. Vous pouvez 
 # 3. Pour chacune des images, répéter les étapes 4 à 6
 # 4. Importer l'image, la re-dimensionner (si nécessaire) et transformer en array
 # 5. Faire un pré-traitement (si nécessaire)
-# 6. Faire la prédiction de l'image et garder la couche définit en (2)
+# 6. Faire la prédiction de l'image et garder la couche définie en (2)
 ```
 
 # Exemple de code
 
-Voici un exemple de code *Python* que nous avons fait pour créer les *features* selon la méthodologie définit plus haut.
+Voici un exemple de code *Python* que nous avons fait pour créer les *features* selon la méthodologie définie plus haut.
 
 ```{py exemple_code}
 
