@@ -132,7 +132,7 @@ $(document).ready(function () {
 <p>Cette page a comme objectif de décrire de manière plus précise comment les <em>features</em> ont été calculées sur le jeu de données <em>train-features.csv</em>.</p>
 <div id="mise-en-contexte" class="section level1">
 <h1>Mise en contexte</h1>
-<p>Étant donné que le traitement des images n’est pas un champ d’expertise facile à maîtriser, nous avons décider de vous donner un petit coup de main. Ainsi, nous avons créés pour vous des <em>features</em> à partir d’un réseau de neurones populaire (<code>ResNet50</code>) entraîné sur le jeu de données <code>imagenet</code>. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de donnes.</p>
+<p>Étant donné que le traitement des images n’est pas un champ d’expertise facile à maîtriser, nous avons décidé de vous donner un petit coup de main. Ainsi, nous avons créé pour vous des <em>features</em> à partir d’un réseau de neurones populaire (<code>ResNet50</code>) entraîné sur le jeu de données <code>imagenet</code>. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de données.</p>
 <p>Il est important de noter que nous n’avons <strong>pas ré-entraîné</strong> le réseau sur notre jeu de données. Nous avons seulement fait la prédiction sur chacune de nos images en conservant les valeurs des neurones de la dernière couche cachée, plutôt que la couche de sortie.</p>
 </div>
 <div id="methodologie-utilisee" class="section level1">
@@ -143,11 +143,11 @@ $(document).ready(function () {
 # 3. Pour chacune des images, répéter les étapes 4 à 6
 # 4. Importer l'image, la re-dimensionner (si nécessaire) et transformer en array
 # 5. Faire un pré-traitement (si nécessaire)
-# 6. Faire la prédiction de l'image et garder la couche définit en (2)</code></pre>
+# 6. Faire la prédiction de l'image et garder la couche définie en (2)</code></pre>
 </div>
 <div id="exemple-de-code" class="section level1">
 <h1>Exemple de code</h1>
-<p>Voici un exemple de code <em>Python</em> que nous avons fait pour créer les <em>features</em> selon la méthodologie définit plus haut.</p>
+<p>Voici un exemple de code <em>Python</em> que nous avons fait pour créer les <em>features</em> selon la méthodologie définie plus haut.</p>
 <pre class="py"><code>
 import re
 from keras.applications.resnet50 import ResNet50
