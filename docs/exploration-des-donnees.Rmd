@@ -16,42 +16,42 @@ knitr::opts_knit$set(root.dir = "../")
 
 # Mise en contexte
 
-Pour entraîner votre modèle, vous aurez accès à des données structurées de 2 manières. La première consiste en un jeu de données plus classiques avec des observations sur des lignes et des variables explicatives sur les colonnes. Pour la deuxième manière, les données sont stockées sous formes d'images classiques, en format *.png*.
+Pour entraîner votre modèle, vous aurez accès à des données structurées dans 2 formats. Le premier format consiste en un jeu de données plus classique avec une observation par ligne et une variable explicative par colonne (ex. *dataframe* R ou python). Pour le deuxième format, les données sont stockées sous formes d'images classiques, en format *.png*.
 
 # Présentation des données
 
-Nous allons commencer par importer les jeu de données.
+Nous allons commencer par importer les jeux de données.
 
 ```{r import_data}
 library(data.table)
 data_train_features <- fread("data/train-features.csv")
-data_train_repoonses <- fread("data/data-id-train.csv")
+data_train_reponses <- fread("data/data-id-train.csv")
 ```
 
 On peut commencer par sortir le nombre de toits verts que nous avons dans notre jeu de données d'entraînement.
 
 ```{r nb_green_roof}
-(table_toits_vert <- table(data_train_repoonses$green_roof_ind))
+(table_toits_vert <- table(data_train_reponses$green_roof_ind))
 ```
 
-On remarque que nous avons environ une proportion d'environ `r paste(round(100 * table_toits_vert[2]/(table_toits_vert[1] + table_toits_vert[2])), "%")` de toits verts dans notre jeu de données. Il s'agit donc d'une situation où les données ne sont pas parfaitement balancées entre les deux classes (50/50). Cependant, il ne s'agit pas d'un cas extrême de données débalancées. C'est un aspect que vous devrez gardez en tête lors de la préparation de votre modèle.
+On remarque que nous avons une proportion d'environ `r (proportion_toits_verts <- paste(round(100 * table_toits_vert[2]/(table_toits_vert[1] + table_toits_vert[2])), "%"))` de toits verts dans notre jeu de données. Il s'agit donc d'une situation où les données ne sont pas parfaitement balancées entre les deux classes (50/50). Cependant, il ne s'agit pas d'un cas extrême de données débalancées. C'est un aspect que vous devrez garder en tête lors de la préparation de votre modèle.
 
-Chaque jeu de données comporte un identifiant unique. Vous pouvez en tout temps retrouver l'image correspondante en utilisant l'*ID* présent dans le nom du fichier. Par exemple, on peut retrouver une image de chacune des classes dans le jeu de données *daat-train-id.csv* et voir les images étant rattachées à celles-ci. Voici un exemple de toit vert:
+Chaque jeu de données comporte un identifiant unique. Vous pouvez en tout temps retrouver l'image correspondante en utilisant l'*ID* présent dans le nom du fichier. Par exemple, on peut retrouver une image de chacune des classes dans le jeu de données *data-train-id.csv* et voir les images étant rattachées à celles-ci. Voici un exemple de toit vert:
 
 ```{r exemple_toit_vert}
 library(png)
 set.seed(666)
 
-exemple_toit_vert <- data_train_repoonses[sample(which(data_train_repoonses$green_roof_ind == 1), 1),]$ID
+exemple_toit_vert <- data_train_reponses[sample(which(data_train_reponses$green_roof_ind == 1), 1),]$ID
 grid::grid.raster(readPNG(paste0("data/data-train-folder/data-train/image-", exemple_toit_vert, ".png")))
 ```
 
 ```{r exemple_toit_normal}
-exemple_toit_normal <- data_train_repoonses[sample(which(data_train_repoonses$green_roof_ind == 0), 1),]$ID
+exemple_toit_normal <- data_train_reponses[sample(which(data_train_reponses$green_roof_ind == 0), 1),]$ID
 grid::grid.raster(readPNG(paste0("data/data-train-folder/data-train/image-", exemple_toit_normal, ".png")))
 ```
 
-On remarque que les toits verts sont reconnus par leur textures "brunâtre" et ayant une certaine texture spécifique. Vous pouvez consulter d'autres exemples pour bien comprendre qu'est que vous devez modéliser.
+On remarque que les toits verts sont reconnus par leur couleur "brunâtre" et leur texture particulière. Vous pouvez consulter d'autres exemples pour bien comprendre ce que vous devez modéliser.
 
 ## Données avec *features*
 
@@ -63,11 +63,11 @@ Vous aurez également accès à un fichier (*data-train.zip*) contenant toutes l
 
 # Exploration des données
 
-L'exploration des données sera faite exclusivement sur le jeu de données plus "classiques" avec les *features* pré-calculées.
+L'exploration des données sera faite exclusivement sur le jeu de données plus "classiques" avec les *features* pré-calculées, tel que défini dans le premier format de la mise en contexte.
 
 ## Informations générales
 
-Comme mentionné un peu plus haut, la proportion de toits verts est d’environ `r paste(round(100 * table_toits_vert[2]/(table_toits_vert[1] + table_toits_vert[2])), "%")`. Voici quelques informations générales sur le jeu de données avec les *features* :
+Comme mentionné plus haut, la proportion de toits verts est d’environ `r proportion_toits_verts`. Voici quelques informations générales sur le jeu de données avec les *features* :
 
 ```{r info_generales}
 dim(data_train_features)
