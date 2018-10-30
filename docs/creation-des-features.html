@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 
 <head>
 
@@ -9,9 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Stéphane Caron" />
+<meta name="author" content="Meetup Machine Learning Québec - Stéphane Caron" />
 
-<meta name="date" content="2018-11-10" />
+<meta name="date" content="2018-10-28" />
 
 <title>Création des features</title>
 
@@ -42,6 +42,16 @@ if (window.hljs) {
 </script>
 
 
+<style type="text/css">
+  p.abstract{
+    text-align: center;
+    font-weight: bold;
+  }
+  div.abstract{
+    margin: auto;
+    width: 90%;
+  }
+</style>
 
 <style type="text/css">
 h1 {
@@ -123,13 +133,16 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Création des <em>features</em></h1>
-<h4 class="author"><em>Stéphane Caron</em></h4>
-<h4 class="date"><em>2018-11-10</em></h4>
+<h4 class="author"><em>Meetup Machine Learning Québec - Stéphane Caron</em></h4>
+<h4 class="date"><em>28 October 2018</em></h4>
+<div class="abstract">
+<p class="abstract">Abstract</p>
+<p>Cette page a comme objectif de décrire de manière plus précise comment les <em>features</em> ont été calculées sur le jeu de données <em>train-features.csv</em>.</p>
+</div>
 
 </div>
 
 
-<p>Cette page a comme objectif de décrire de manière plus précise comment les <em>features</em> ont été calculées sur le jeu de données <em>train-features.csv</em>.</p>
 <div id="mise-en-contexte" class="section level1">
 <h1>Mise en contexte</h1>
 <p>Étant donné que le traitement des images n’est pas un champ d’expertise facile à maîtriser, nous avons décidé de vous donner un petit coup de main. Ainsi, nous avons créé pour vous des <em>features</em> à partir d’un réseau de neurones populaire (<code>ResNet50</code>) entraîné sur le jeu de données <code>imagenet</code>. Ce modèle a été entraîné pour reconnaître des objets dans une image. Dans notre cas, nous voulons reconnaître des toits verts, ce qui ne fait pas partie des objets que le réseau a été entraîné à prédire. Ainsi, nous avons conservé les valeurs des neurones dans la dernière couche cachée du réseau pour chacune des images du jeu de données.</p>
